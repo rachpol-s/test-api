@@ -430,10 +430,6 @@ button {
 .default-image {
   border-radius: 50%;
 }
-.crew-img {
-  width: 40%;
-  border-radius: 50%;
-}
 .avatar {
   vertical-align: middle;
   width: 50px;
