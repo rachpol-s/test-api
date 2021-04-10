@@ -9,7 +9,7 @@
         >
           <button
             type="button"
-            class="btn"
+            class="btn col"
             :class="{ buttonblue: btn === 1 }"
             @click="btn = 1"
           >
@@ -17,7 +17,7 @@
           </button>
           <button
             type="button"
-            class="btn"
+            class="btn col"
             :class="{ buttonblue: btn === 2 }"
             @click="btn = 2"
           >
@@ -25,7 +25,7 @@
           </button>
           <button
             type="button"
-            class="btn"
+            class="btn col"
             :class="{ buttonblue: btn === 3 }"
             @click="btn = 3"
           >
@@ -35,39 +35,54 @@
       </div>
 
       <div v-if="btn === 1" class="row mt-2">
-        <div
-          class="card text-left mt-2"
-          v-for="data in info"
-          :key="data.index"
-          style="width:100%"
-        >
-          <div class="card-body">
-            <div class="row" style="padding:20px">
-              <div v-if="data.links.patch.small !== null" class="icon">
-                <img :src="data.links.patch.small" />
+        <div>
+          <div
+            class="card mt-2"
+            v-for="data in apiLaunch"
+            :key="data.index"
+            style="width:100%"
+          >
+            <div class="card-body">
+              <div class="row align-items-center" style="padding:20px">
+                <div class="col-1 icon">
+                  <img
+                    :src="data.links.patch.small"
+                    v-if="data.links.patch.small !== null"
+                  />
+                  <img src="https://imgur.com/BrW201S.png" v-else />
+                </div>
+
+                <div class="col-3">
+                  <h4>
+                    {{ data.name }}
+                  </h4>
+                </div>
+
+                <div class="col-6">
+                  <div class="row justify-content-end">
+                    <div style="margin-right:10px">
+                      <p
+                        v-if="data.crew.length"
+                        class="text-center text-white"
+                        style="background-color: blue; border-radius:20px; padding:5px"
+                      >
+                        {{ data.crew.length }} crews
+                      </p>
+                    </div>
+
+                    <p>
+                      {{ new Date(data.date_local) }}
+                    </p>
+                  </div>
+                </div>
+
+                <div class="col-2 text-right blue">
+                  <p v-if="new Date() < new Date(data.date_local)">
+                    Upcoming
+                  </p>
+                  <p v-else>Launched</p>
+                </div>
               </div>
-              <div v-else class="icon" style="margin-right: 20px">
-                <img src="https://imgur.com/BrW201S.png" />
-              </div>
-              <h4 class="card-title" style="margin-right: auto">
-                {{ data.name }}
-              </h4>
-              <div v-if="data.crew.length" style="width:7%; margin-right: 20px">
-                <p
-                  class="text-center text-white"
-                  style="background-color: blue; border-radius:15px"
-                >
-                  {{ data.crew.length }} crews
-                </p>
-              </div>
-              <p style="margin-right: 20px">{{ new Date(data.date_local) }}</p>
-              <p
-                style="margin-right: 20px; color:blue"
-                v-if="new Date() < new Date(data.date_local)"
-              >
-                Upcoming
-              </p>
-              <p style="margin-right: 20px; color:blue" v-else>Launched</p>
             </div>
           </div>
         </div>
@@ -82,8 +97,8 @@ import axios from "axios";
 export default {
   data() {
     return {
-      info: "",
-      info2: "",
+      apiLaunch: "",
+      apiCrew: "",
       btn: 1,
       allCrewId: [],
       mapCrew: [
@@ -95,9 +110,8 @@ export default {
     };
   },
   watch: {
-    info() {
-      console.log("info1");
-      this.info.forEach((element) => {
+    apiLaunch() {
+      this.apiLaunch.forEach((element) => {
         if (element.crew.length > 0) {
           // console.log('crew id = '+element.crew)
           element.crew.forEach((element2) => {
@@ -111,12 +125,10 @@ export default {
       // console.log(this.mapCrew);
       this.mapCrew.pop();
       // console.log(this.mapCrew);
-
-      console.log("info2");
-      this.info2.forEach((element) => {
+      this.apiCrew.forEach((element) => {
         this.allCrewId.forEach((element2) => {
-          console.log("main = " + element.id);
-          console.log("check = " + element2);
+          // console.log("main = " + element.id);
+          // console.log("check = " + element2);
           if (element.id === element2) {
             console.log(true);
             this.mapCrew.push({
@@ -135,13 +147,17 @@ export default {
     axios
       .get("https://api.spacexdata.com/v4/launches")
       .then(
-        (response) => ((this.info = response.data), console.log(this.info))
+        (response) => (
+          (this.apiLaunch = response.data), console.log(this.apiLaunch)
+        )
       );
 
     axios
       .get("https://api.spacexdata.com/v4/crew")
       .then(
-        (response) => ((this.info2 = response.data), console.log(this.info2))
+        (response) => (
+          (this.apiCrew = response.data), console.log(this.apiCrew)
+        )
       );
   },
 };
@@ -161,6 +177,9 @@ button {
   color: white;
 }
 .icon img {
-  width: 30%;
-}</style
->>
+  width: 100%;
+}
+.blue{
+  color: blue;
+}
+</style>
