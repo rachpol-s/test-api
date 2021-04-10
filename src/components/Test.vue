@@ -35,48 +35,140 @@
       </div>
 
       <div v-if="btn === 1" class="row mt-2">
-        <div
-          class="card mt-2"
-          v-for="data in apiLaunch"
-          :key="data.index"
-          style="width:100%"
-          @click="openModal()"
-        >
-          <div class="card-body">
-            <div class="row align-items-center" style="padding:20px">
-              <div class="col-2 icon">
-                <img
-                  :src="data.links.patch.small"
-                  v-if="data.links.patch.small !== null"
-                />
-                <img src="https://imgur.com/BrW201S.png" v-else />
-              </div>
+        <div v-for="data in apiLaunch" :key="data.index" style="width:100%">
+          <div class="card mt-2" @click="openModal(data.name)">
+            <div class="card-body">
+              <div class="row align-items-center" style="padding:20px">
+                <div class="col-2 icon">
+                  <img
+                    :src="data.links.patch.small"
+                    v-if="data.links.patch.small !== null"
+                  />
+                  <img src="https://imgur.com/BrW201S.png" v-else />
+                </div>
 
-              <div class="col-5">
-                <h4>
-                  {{ data.name }}
-                </h4>
-              </div>
+                <div class="col-5">
+                  <h4>
+                    {{ data.name }}
+                  </h4>
+                </div>
 
-              <div class="col-5">
-                <div class="row justify-content-end align-items-center">
-                  <div>
-                    <p
-                      v-if="data.crew.length"
-                      class="text-center text-white crew"
-                    >
-                      {{ data.crew.length }} crews
+                <div class="col-5">
+                  <div class="row justify-content-end align-items-center">
+                    <div>
+                      <p
+                        v-if="data.crew.length"
+                        class="text-center text-white crew"
+                      >
+                        {{ data.crew.length }} crews
+                      </p>
+                    </div>
+
+                    <p style="padding-left:20px">
+                      {{ new Date(data.date_local).toString().slice(0, 15) }}
                     </p>
+                    <div class="text-right blue" style="padding-left:20px">
+                      <p v-if="new Date() < new Date(data.date_local)">
+                        Upcoming
+                      </p>
+                      <p v-else>Launched</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div v-if="btn === 2" class="row mt-2">
+        <div v-for="data in apiLaunch" :key="data.index" style="width:100%">
+          <div v-if="new Date() > new Date(data.date_local)">
+            <div class="card mt-2" @click="openModal(data.name)">
+              <div class="card-body">
+                <div class="row align-items-center" style="padding:20px">
+                  <div class="col-2 icon">
+                    <img
+                      :src="data.links.patch.small"
+                      v-if="data.links.patch.small !== null"
+                    />
+                    <img src="https://imgur.com/BrW201S.png" v-else />
                   </div>
 
-                  <p style="padding-left:20px">
-                    {{ new Date(data.date_local).toString().slice(0, 15) }}
-                  </p>
-                  <div class="text-right blue" style="padding-left:20px">
-                    <p v-if="new Date() < new Date(data.date_local)">
-                      Upcoming
-                    </p>
-                    <p v-else>Launched</p>
+                  <div class="col-5">
+                    <h4>
+                      {{ data.name }}
+                    </h4>
+                  </div>
+
+                  <div class="col-5">
+                    <div class="row justify-content-end align-items-center">
+                      <div>
+                        <p
+                          v-if="data.crew.length"
+                          class="text-center text-white crew"
+                        >
+                          {{ data.crew.length }} crews
+                        </p>
+                      </div>
+
+                      <p style="padding-left:20px">
+                        {{ new Date(data.date_local).toString().slice(0, 15) }}
+                      </p>
+                      <div class="text-right blue" style="padding-left:20px">
+                        <p>
+                          Launched
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div v-if="btn === 3" class="row mt-2">
+        <div v-for="data in apiLaunch" :key="data.index" style="width:100%">
+          <div v-if="new Date() < new Date(data.date_local)">
+            <div class="card mt-2" @click="openModal(data.name)">
+              <div class="card-body">
+                <div class="row align-items-center" style="padding:20px">
+                  <div class="col-2 icon">
+                    <img
+                      :src="data.links.patch.small"
+                      v-if="data.links.patch.small !== null"
+                    />
+                    <img src="https://imgur.com/BrW201S.png" v-else />
+                  </div>
+
+                  <div class="col-5">
+                    <h4>
+                      {{ data.name }}
+                    </h4>
+                  </div>
+
+                  <div class="col-5">
+                    <div class="row justify-content-end align-items-center">
+                      <div>
+                        <p
+                          v-if="data.crew.length"
+                          class="text-center text-white crew"
+                        >
+                          {{ data.crew.length }} crews
+                        </p>
+                      </div>
+
+                      <p style="padding-left:20px">
+                        {{ new Date(data.date_local).toString().slice(0, 15) }}
+                      </p>
+                      <div class="text-right blue" style="padding-left:20px">
+                        <p>
+                          Upcoming
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -104,8 +196,16 @@ export default {
           name: "",
         },
       ],
+      showModal: false,
     };
   },
+  methods: {
+    openModal(name) {
+      console.log(name);
+      this.showMoal = true;
+    },
+  },
+  computed: {},
   watch: {
     apiLaunch() {
       this.apiLaunch.forEach((element) => {
@@ -136,12 +236,6 @@ export default {
           }
         });
       });
-    },
-  },
-  computed: {},
-  method: {
-    openModal: function() {
-      console.log("Modal Click ");
     },
   },
   mounted() {
