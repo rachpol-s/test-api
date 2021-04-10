@@ -35,52 +35,49 @@
       </div>
 
       <div v-if="btn === 1" class="row mt-2">
-        <div>
-          <div
-            class="card mt-2"
-            v-for="data in apiLaunch"
-            :key="data.index"
-            style="width:100%"
-          >
-            <div class="card-body">
-              <div class="row align-items-center" style="padding:20px">
-                <div class="col-1 icon">
-                  <img
-                    :src="data.links.patch.small"
-                    v-if="data.links.patch.small !== null"
-                  />
-                  <img src="https://imgur.com/BrW201S.png" v-else />
-                </div>
+        <div
+          class="card mt-2"
+          v-for="data in apiLaunch"
+          :key="data.index"
+          style="width:100%"
+          @click="openModal()"
+        >
+          <div class="card-body">
+            <div class="row align-items-center" style="padding:20px">
+              <div class="col-2 icon">
+                <img
+                  :src="data.links.patch.small"
+                  v-if="data.links.patch.small !== null"
+                />
+                <img src="https://imgur.com/BrW201S.png" v-else />
+              </div>
 
-                <div class="col-3">
-                  <h4>
-                    {{ data.name }}
-                  </h4>
-                </div>
+              <div class="col-5">
+                <h4>
+                  {{ data.name }}
+                </h4>
+              </div>
 
-                <div class="col-6">
-                  <div class="row justify-content-end">
-                    <div style="margin-right:10px">
-                      <p
-                        v-if="data.crew.length"
-                        class="text-center text-white"
-                        style="background-color: blue; border-radius:20px; padding:5px"
-                      >
-                        {{ data.crew.length }} crews
-                      </p>
-                    </div>
-
-                    <p>
-                      {{ new Date(data.date_local) }}
+              <div class="col-5">
+                <div class="row justify-content-end align-items-center">
+                  <div>
+                    <p
+                      v-if="data.crew.length"
+                      class="text-center text-white crew"
+                    >
+                      {{ data.crew.length }} crews
                     </p>
                   </div>
-                </div>
 
-                <div class="col-2 text-right blue">
-                  <p v-if="new Date() < new Date(data.date_local)">
-                    Upcoming
+                  <p style="padding-left:20px">
+                    {{ new Date(data.date_local).toString().slice(0, 15) }}
                   </p>
-                  <p v-else>Launched</p>
+                  <div class="text-right blue" style="padding-left:20px">
+                    <p v-if="new Date() < new Date(data.date_local)">
+                      Upcoming
+                    </p>
+                    <p v-else>Launched</p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -130,7 +127,7 @@ export default {
           // console.log("main = " + element.id);
           // console.log("check = " + element2);
           if (element.id === element2) {
-            console.log(true);
+            // console.log(true);
             this.mapCrew.push({
               id: element.id,
               name: element.name,
@@ -142,7 +139,11 @@ export default {
     },
   },
   computed: {},
-  method: {},
+  method: {
+    openModal: function() {
+      console.log("Modal Click ");
+    },
+  },
   mounted() {
     axios
       .get("https://api.spacexdata.com/v4/launches")
@@ -170,16 +171,22 @@ button {
   border-color: rgb(224, 221, 221);
 }
 .buttonblue {
-  background-color: blue;
+  background-color: rgb(10, 10, 173);
   color: white;
 }
 .buttonblue:hover {
   color: white;
 }
 .icon img {
-  width: 100%;
+  width: 60%;
 }
-.blue{
-  color: blue;
+.crew {
+  background-color: rgb(10, 10, 173);
+  border-radius: 20px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+.blue {
+  color: rgb(10, 10, 173);
 }
 </style>
